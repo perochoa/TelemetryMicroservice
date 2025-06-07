@@ -1,0 +1,42 @@
+syntax = "proto3";
+option csharp_namespace = "TelemetryMicroservice.Protos";
+package vehicledata;
+
+service VehicleDataService {
+	rpc SendVehicleData(VehicleDataRequest) returns (VehicleDataResponse);
+	rpc SendBulkVehicleData(stream VehicleDataRequest) returns (BulkDataResponse);
+}
+
+message VehicleDataRequest {
+	string vehicle_id = 1;
+	int64 timestamp = 2;
+	GPSData gps_data = 3;
+	OBDData od_data = 4;
+}
+
+message OBDData {
+  double engine_rpm = 1;
+  double vehicle_speed = 2;
+  double engine_load = 3;
+  double coolant_temp = 4;
+  double intake_air_temp = 5;
+  double maf_rate = 6;
+  double throttle_position = 7;
+  double fuel_level = 8;
+  repeated DiagnosticCode dtc_codes = 9;
+}
+
+message DiagnosticCode {
+  string code = 1;
+  string description = 2;
+}
+
+message VehicleDataResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message BulkDataResponse {
+  int32 processed_count = 1;
+  int32 failed_count = 2;
+}
